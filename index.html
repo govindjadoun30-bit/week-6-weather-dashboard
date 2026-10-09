@@ -1,0 +1,413 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#101827" />
+  <meta name="description" content="A responsive weather dashboard with current conditions, a five-day forecast, saved cities, and preferences." />
+
+  <title>Atmos — Weather Dashboard</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="css/styles.css" />
+  <script src="js/app.js" type="module"></script>
+</head>
+
+<body>
+  <div class="app-shell">
+
+    <!-- Sidebar -->
+    <aside class="sidebar" aria-label="Main navigation">
+
+      <a class="brand" href="#" aria-label="Atmos home">
+        <span class="brand-mark">✦</span>
+        <span>atmos<span class="brand-dot">.</span></span>
+      </a>
+
+      <p class="nav-label">WORKSPACE</p>
+
+      <button class="nav-item active" type="button">
+        <span>◉</span> Overview
+      </button>
+
+      <button class="nav-item" id="favorites-nav" type="button">
+        <span>♡</span> Saved cities
+        <span class="nav-count" id="favorite-count">0</span>
+      </button>
+
+      <div class="sidebar-bottom">
+
+        <div class="tip-card">
+          <div class="tip-icon">☼</div>
+          <p class="tip-title">Weather tip</p>
+          <p class="tip-copy">
+            A little planning goes a long way. Check the forecast before heading out.
+          </p>
+        </div>
+
+        <div class="sidebar-footer">
+          <span class="status-dot"></span>
+          Live weather workspace
+        </div>
+
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+      <!-- Header -->
+      <header class="topbar">
+
+        <div>
+          <p class="eyebrow">YOUR WEATHER, AT A GLANCE</p>
+          <h1>Weather dashboard</h1>
+        </div>
+
+        <div class="top-actions">
+
+          <label class="unit-switch" for="units-select">
+            <span>Units</span>
+
+            <select id="units-select" aria-label="Temperature units">
+              <option value="metric">°C</option>
+              <option value="imperial">°F</option>
+            </select>
+          </label>
+
+          <button
+            id="theme-toggle"
+            class="icon-button"
+            type="button"
+            aria-label="Toggle light and dark theme"
+            title="Toggle theme"
+          >☼</button>
+
+          <div class="avatar" aria-hidden="true">A</div>
+
+        </div>
+      </header>
+
+      <!-- City Search -->
+      <section class="search-row" aria-label="Search for a city">
+
+        <form id="search-form" class="search-box">
+
+          <span class="search-icon" aria-hidden="true">⌕</span>
+
+          <label class="sr-only" for="city-input">
+            Search city
+          </label>
+
+          <input
+            id="city-input"
+            name="city"
+            type="search"
+            placeholder="Search city, e.g. Delhi, London..."
+            autocomplete="off"
+            required
+          />
+
+          <button type="submit" id="search-button">
+            Search <span aria-hidden="true">↗</span>
+          </button>
+
+        </form>
+
+        <button
+          class="location-button"
+          id="location-button"
+          type="button"
+        >
+          <span>◎</span> Use my location
+        </button>
+
+      </section>
+
+      <!-- Status Messages -->
+      <div
+        id="status-message"
+        class="status-message"
+        role="status"
+        aria-live="polite"
+      ></div>
+
+      <!-- Current Weather and Weather Details -->
+      <section class="hero-grid" aria-label="Current weather">
+
+        <!-- Current Weather Card -->
+        <article class="current-card panel">
+
+          <div class="card-topline">
+
+            <div>
+              <p class="eyebrow light-eyebrow">CURRENT WEATHER</p>
+
+              <h2 id="current-city">Search a city</h2>
+
+              <p id="current-date" class="muted">
+                Your local weather, made simple
+              </p>
+
+              <!-- Time-Based Animation Label -->
+              <p class="scene-label">
+                <span id="time-scene-label">☀️ Daytime Sky</span>
+              </p>
+
+            </div>
+
+            <button
+              id="favorite-button"
+              class="favorite-button"
+              type="button"
+              aria-label="Save current city"
+              title="Save city"
+            >♡</button>
+
+          </div>
+
+          <div class="current-weather-main">
+
+            <div>
+              <div id="current-temp" class="current-temp">--°</div>
+
+              <p id="current-description" class="weather-description">
+                Search to see conditions
+              </p>
+
+              <p id="feels-like" class="feels-like">
+                Feels like --°
+              </p>
+            </div>
+
+            <!-- Animated Weather Illustration -->
+            <div class="weather-art" aria-hidden="true">
+
+              <div class="sun-glow"></div>
+
+              <div id="current-emoji" class="weather-emoji">☀</div>
+
+              <div class="weather-cloud cloud-one"></div>
+
+              <div class="weather-cloud cloud-two"></div>
+
+            </div>
+
+          </div>
+
+          <div class="current-bottom">
+
+            <span>
+              <span class="mini-icon">↗</span>
+              <span id="high-low">H: --° · L: --°</span>
+            </span>
+
+            <span id="current-timezone">Local conditions</span>
+
+          </div>
+
+        </article>
+
+        <!-- Weather Details Card -->
+        <article class="conditions-card panel">
+
+          <div class="section-heading">
+
+            <div>
+              <p class="eyebrow">AT A GLANCE</p>
+              <h2>Weather details</h2>
+            </div>
+
+            <span class="heading-icon">✧</span>
+
+          </div>
+
+          <div class="metric-grid">
+
+            <div class="metric">
+
+              <div class="metric-icon humidity">≋</div>
+
+              <div>
+                <p>Humidity</p>
+                <strong id="humidity-value">--%</strong>
+                <span id="humidity-note">Air moisture</span>
+              </div>
+
+            </div>
+
+            <div class="metric">
+
+              <div class="metric-icon wind">➤</div>
+
+              <div>
+                <p>Wind speed</p>
+                <strong id="wind-value">--</strong>
+                <span id="wind-note">Current wind</span>
+              </div>
+
+            </div>
+
+            <div class="metric">
+
+              <div class="metric-icon pressure">◉</div>
+
+              <div>
+                <p>Pressure</p>
+                <strong id="pressure-value">-- hPa</strong>
+                <span>Atmospheric</span>
+              </div>
+
+            </div>
+
+            <div class="metric">
+
+              <div class="metric-icon visibility">◌</div>
+
+              <div>
+                <p>Visibility</p>
+                <strong id="visibility-value">-- km</strong>
+                <span>Clear distance</span>
+              </div>
+
+            </div>
+
+          </div>
+
+        </article>
+
+      </section>
+
+      <!-- Five-Day Forecast -->
+      <section class="forecast-section panel">
+
+        <div class="section-heading forecast-heading">
+
+          <div>
+            <p class="eyebrow">PLAN AHEAD</p>
+            <h2>5-day forecast</h2>
+          </div>
+
+          <span class="forecast-subtitle">Daily outlook</span>
+
+        </div>
+
+        <div id="forecast-list" class="forecast-list">
+
+          <div class="empty-forecast">
+            <span>☁</span>
+            <p>Your forecast will appear here</p>
+            <small>Search a city to get started.</small>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- Saved Cities and Preferences -->
+      <section class="bottom-grid">
+
+        <!-- Saved Cities -->
+        <article class="panel saved-panel">
+
+          <div class="section-heading">
+
+            <div>
+              <p class="eyebrow">QUICK ACCESS</p>
+              <h2>Saved cities</h2>
+            </div>
+
+            <span class="heading-icon">♡</span>
+
+          </div>
+
+          <div id="saved-cities" class="saved-cities">
+            <p class="empty-saved">
+              Save a city with the heart icon to find it here.
+            </p>
+          </div>
+
+        </article>
+
+        <!-- User Preferences -->
+        <article class="panel preferences-panel">
+
+          <div class="section-heading">
+
+            <div>
+              <p class="eyebrow">MAKE IT YOURS</p>
+              <h2>Your preferences</h2>
+            </div>
+
+            <span class="heading-icon">⚙</span>
+
+          </div>
+
+          <div class="preference-row">
+
+            <div>
+              <strong>Default city</strong>
+              <p>Load this city when you return</p>
+            </div>
+
+            <span id="default-city-label" class="preference-value">
+              Not set
+            </span>
+
+          </div>
+
+          <div class="preference-row">
+
+            <div>
+              <strong>Temperature units</strong>
+              <p>Choose Celsius or Fahrenheit</p>
+            </div>
+
+            <span id="units-label" class="preference-value">
+              Celsius
+            </span>
+
+          </div>
+
+          <div class="preference-row">
+
+            <div>
+              <strong>Appearance</strong>
+              <p>Comfortable in any light</p>
+            </div>
+
+            <span id="theme-label" class="preference-value">
+              Dark
+            </span>
+
+          </div>
+
+        </article>
+
+      </section>
+
+      <!-- Footer -->
+      <footer class="page-footer">
+
+        <span>✦ atmos.</span>
+
+        <span>Weather data powered by OpenWeather</span>
+
+        <span>Week 6 · Advanced JavaScript &amp; APIs</span>
+
+      </footer>
+
+    </main>
+
+  </div>
+</body>
+</html>
+```
